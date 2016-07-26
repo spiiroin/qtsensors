@@ -53,7 +53,8 @@ SensorfwSensorBase::SensorfwSensorBase(QSensor *sensor)
       m_efficientBufferSize(1),
       m_maxBufferSize(1),
       m_available(false),
-      running(false)
+      running(false),
+      m_attemptRestart(false)
 
 {
     watcher = new QDBusServiceWatcher("com.nokia.SensorService",QDBusConnection::systemBus(),
@@ -125,8 +126,12 @@ void SensorfwSensorBase::start()
         if (returnCode == 0) {
             running = true;
             return;
+        } else if (returnCode == QDBusError::ServiceUnknown) {
+            m_attemptRestart = true;
+            qWarning() << "m_sensorInterface did not start, DBus service unknown. Waiting for service registration and retrying.";
+        } else {
+            qWarning() << "m_sensorInterface did not start, error code:" << returnCode;
         }
-        qWarning() << "m_sensorInterface did not start, error code:" << returnCode;
     }
     sensorStopped();
 }
@@ -136,6 +141,7 @@ void SensorfwSensorBase::stop()
     if (m_sensorInterface)
         m_sensorInterface->stop();
     running = false;
+    m_attemptRestart = false;
 }
 
 void SensorfwSensorBase::setRanges(qreal correctionFactor)
@@ -213,7 +219,7 @@ void SensorfwSensorBase::connectToSensord()
         m_remoteSensorManager = 0;
         return;
     }
-    if (running) {
+    if (running || m_attemptRestart) {
         stop();
         reinitIsNeeded = true;
         start();
