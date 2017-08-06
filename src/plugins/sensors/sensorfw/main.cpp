@@ -36,6 +36,7 @@
 #include "sensorfwcompass.h"
 #include "sensorfwmagnetometer.h"
 #include "sensorfworientationsensor.h"
+#include "sensorfwpressuresensor.h"
 #include "sensorfwproximitysensor.h"
 #include "sensorfwirproximitysensor.h"
 #include "sensorfwrotationsensor.h"
@@ -83,6 +84,8 @@ public:
             return new SensorfwMagnetometer(sensor);
         if (sensor->identifier() == SensorfwOrientationSensor::id)
             return new SensorfwOrientationSensor(sensor);
+        if (sensor->identifier() == SensorfwPressureSensor::id)
+            return new SensorfwPressureSensor(sensor);
         if (sensor->identifier() == SensorfwProximitySensor::id)
             return new SensorfwProximitySensor(sensor);
         if (sensor->identifier() == SensorfwRotationSensor::id)
