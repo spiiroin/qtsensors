@@ -2,7 +2,7 @@ Name:       qt5-qtsensors
 Summary:    Qt Sensors module
 Version:    5.6.3
 Release:    1
-License:    LGPLv2.1 with exception or GPLv3
+License:    (LGPLv2 or LGPLv3) with exception or GPLv3 or Qt Commercial
 URL:        https://github.com/qt/qtsensors
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires:  qt5-qtcore-devel
@@ -101,6 +101,8 @@ rm -f %{buildroot}/%{_sysconfdir}/xdg/QtProject/Sensors.conf
 
 %files
 %defattr(-,root,root,-)
+%license LICENSE.LGPLv* LGPL_EXCEPTION.txt
+%license LICENSE.GPLv3 LICENSE.FDL
 %{_libdir}/libQt5Sensors.so.5
 %{_libdir}/libQt5Sensors.so.5.*
 
