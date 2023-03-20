@@ -12,7 +12,7 @@ BuildRequires:  qt5-qtnetwork-devel
 BuildRequires:  qt5-qtdeclarative-qtquick-devel
 BuildRequires:  qt5-qmake
 BuildRequires:  fdupes
-BuildRequires:  pkgconfig(sensord-qt5)
+BuildRequires:  pkgconfig(sensord-qt5) >= 0.13.0
 
 %description
 Qt is a cross-platform application and UI framework. Using Qt, you can
@@ -43,6 +43,7 @@ This package contains the Sensors import for Qtml
 %package plugin-sensorfw
 Summary:    sensorfw sensors plugin
 Requires:   %{name} = %{version}-%{release}
+Requires:   sensorfw-qt5 >= 0.13.0
 
 %description plugin-sensorfw
 This package contains the sensorfw plugin for sensors
