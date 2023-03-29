@@ -87,12 +87,7 @@ void SensorfwSensorBase::start()
         // dataRate
         QByteArray type = sensor()->type();
         if (type != QTapSensor::type && type != QProximitySensor::type) {
-            int dataRate = sensor()->dataRate();
-            int interval = dataRate > 0 ? 1000 / dataRate : 0;
-            // for testing maximum speed
-            //interval = 1;
-            //dataRate = 1000;
-            m_sensorInterface->setInterval(interval);
+            m_sensorInterface->setDataRate(sensor()->dataRate());
         }
 
         // outputRange
