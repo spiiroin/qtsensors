@@ -41,6 +41,7 @@ SensorfwOrientationSensor::SensorfwOrientationSensor(QSensor *sensor)
     : SensorfwSensorBase(sensor)
     , m_initDone(false)
 {
+    qWarning("################ %s", __PRETTY_FUNCTION__);
     init();
     setReading<QOrientationReading>(&m_reading);
     sensor->setDataRate(10);//set a default rate
@@ -49,6 +50,7 @@ SensorfwOrientationSensor::SensorfwOrientationSensor(QSensor *sensor)
 
 void SensorfwOrientationSensor::start()
 {
+    qWarning("################ %s", __PRETTY_FUNCTION__);
     if (reinitIsNeeded)
         init();
     if (m_sensorInterface) {
@@ -63,6 +65,7 @@ void SensorfwOrientationSensor::start()
 
 void SensorfwOrientationSensor::slotDataAvailable(const Unsigned& data)
 {
+    qWarning("################ %s", __PRETTY_FUNCTION__);
     m_reading.setOrientation(SensorfwOrientationSensor::getOrientation(data.x()));
     m_reading.setTimestamp(data.UnsignedData().timestamp_);
     newReadingAvailable();
@@ -70,6 +73,7 @@ void SensorfwOrientationSensor::slotDataAvailable(const Unsigned& data)
 
 bool SensorfwOrientationSensor::doConnect()
 {
+    qWarning("################ %s", __PRETTY_FUNCTION__);
     Q_ASSERT(m_sensorInterface);
     return QObject::connect(m_sensorInterface, SIGNAL(orientationChanged(Unsigned)),
                             this, SLOT(slotDataAvailable(Unsigned)));
@@ -95,6 +99,7 @@ QOrientationReading::Orientation SensorfwOrientationSensor::getOrientation(int o
 
 void SensorfwOrientationSensor::init()
 {
+    qWarning("################ %s", __PRETTY_FUNCTION__);
     m_initDone = false;
     initSensor<OrientationSensorChannelInterface>(m_initDone);
 }
