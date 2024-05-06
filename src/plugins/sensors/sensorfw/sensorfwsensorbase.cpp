@@ -57,6 +57,7 @@ SensorfwSensorBase::SensorfwSensorBase(QSensor *sensor)
       m_attemptRestart(false)
 
 {
+    qWarning("################ SensorfwSensorBase()");
     watcher = new QDBusServiceWatcher("com.nokia.SensorService",QDBusConnection::systemBus(),
             QDBusServiceWatcher::WatchForRegistration |
             QDBusServiceWatcher::WatchForUnregistration, this);
@@ -83,6 +84,7 @@ SensorfwSensorBase::~SensorfwSensorBase()
 
 void SensorfwSensorBase::start()
 {
+    qWarning("################ start() m_sensorInterface=%p", m_sensorInterface);
     if (m_sensorInterface) {
         // dataRate
         QByteArray type = sensor()->type();
@@ -122,17 +124,19 @@ void SensorfwSensorBase::start()
             running = true;
             return;
         } else if (returnCode == QDBusError::ServiceUnknown) {
-            m_attemptRestart = true;
             qWarning() << "m_sensorInterface did not start, DBus service unknown. Waiting for service registration and retrying.";
         } else {
             qWarning() << "m_sensorInterface did not start, error code:" << returnCode;
         }
     }
+
+    m_attemptRestart = true;
     sensorStopped();
 }
 
 void SensorfwSensorBase::stop()
 {
+    qWarning("################ stop() m_sensorInterface=%p", m_sensorInterface);
     if (m_sensorInterface)
         m_sensorInterface->stop();
     running = false;
@@ -157,6 +161,7 @@ void SensorfwSensorBase::setRanges(qreal correctionFactor)
 
 bool SensorfwSensorBase::doConnectAfterCheck()
 {
+    qWarning("################ doConnectAfterCheck()");
     if (!m_sensorInterface) return false;
 
     // buffer size
@@ -208,6 +213,8 @@ qreal SensorfwSensorBase::correctionFactor() const
 
 void SensorfwSensorBase::connectToSensord()
 {
+    qWarning("################ connectToSensord()");
+
     m_remoteSensorManager = &SensorManagerInterface::instance();
     if (!m_remoteSensorManager->isValid()) {
         qWarning() << "SensorManagerInterface is invalid";
@@ -224,12 +231,16 @@ void SensorfwSensorBase::connectToSensord()
 
 void SensorfwSensorBase::sensordUnregistered()
 {
+    qWarning("################ sensordUnregistered()");
     m_bufferSize = -1;
     reinitIsNeeded = true;
+// QUARANTINE     if (running)
+// QUARANTINE         m_attemptRestart = true;
 }
 
 bool SensorfwSensorBase::initSensorInterface(QString const &name)
 {
+    qWarning("################ initSensorInterface()");
     if (!m_sensorInterface) {
         sensorError(KErrNotFound);
         return false;
