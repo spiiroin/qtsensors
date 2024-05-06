@@ -130,6 +130,7 @@ void SensorfwSensorBase::start()
         }
     }
 
+    m_bufferSize = -1;
     m_attemptRestart = true;
     sensorStopped();
 }
@@ -237,12 +238,13 @@ void SensorfwSensorBase::sensordUnregistered()
 // QUARANTINE     if (running)
 // QUARANTINE         m_attemptRestart = true;
 }
-
+#define HERE() qWarning("################ %s:%d: %s ...", __FILE__, __LINE__, __func__)
 bool SensorfwSensorBase::initSensorInterface(QString const &name)
 {
     qWarning("################ initSensorInterface()");
     if (!m_sensorInterface) {
         sensorError(KErrNotFound);
+        HERE();
         return false;
     }
 
@@ -291,6 +293,7 @@ bool SensorfwSensorBase::initSensorInterface(QString const &name)
     // TODO deztructor: Leaking abstraction detected. Just copied code
     // from initSensor<>() here, need to
     QByteArray type = sensor()->type();
+    HERE();
     if ((type == QAmbientLightSensor::type) // SensorFW returns lux values, plugin enumerated values
         || (type == QIRProximitySensor::type) // SensorFW returns raw reflectance values, plugin % of max reflectance
         || (name == "accelerometersensor") // SensorFW returns milliGs, plugin m/s^2
@@ -301,7 +304,9 @@ bool SensorfwSensorBase::initSensorInterface(QString const &name)
     setDescription(m_sensorInterface->description());
 
     if (name == "tapsensor") return true;
+    HERE();
     setRanges();
+    HERE();
     return true;
 }
 
